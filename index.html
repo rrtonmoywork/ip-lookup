@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP Lookup</title>
+<script src="https://cdn.jsdelivr.net/npm/faker@5.5.3/dist/faker.min.js"></script>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0;
+    --muted: #888;
+    --accent: #4f8ef7;
+    --accent-hover: #6ba3ff;
+    --accent-dim: rgba(79,142,247,0.15);
+    --danger: #ff5f5f;
+    --danger-bg: rgba(255,95,95,0.1);
+    --success: #4caf7d;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 24px 16px 40px;
+  }
+  .container {
+    width: 100%;
+    max-width: 560px;
+  }
+  h1 {
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  input[type="text"] {
+    flex: 1;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 0;
+  }
+  input[type="text"]::placeholder { color: var(--muted); }
+  input[type="text"]:focus { border-color: var(--accent); }
+  button.lookup-btn {
+    padding: 12px 20px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  button.lookup-btn:hover { background: var(--accent-hover); }
+  button.lookup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  #loading {
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+    padding: 20px 0;
+    display: none;
+  }
+  .dot-anim::after {
+    content: '';
+    animation: dots 1.2s infinite;
+  }
+  @keyframes dots {
+    0%   { content: ''; }
+    33%  { content: '.'; }
+    66%  { content: '..'; }
+    100% { content: '...'; }
+  }
+  #errorMsg {
+    background: var(--danger-bg);
+    border: 1px solid rgba(255,95,95,0.3);
+    color: var(--danger);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 14px;
+    display: none;
+    margin-bottom: 16px;
+  }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: none;
+  }
+  .field {
+    display: flex;
+    align-items: center;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .field:last-child { border-bottom: none; }
+  .field.highlight {
+    background: var(--accent-dim);
+    border-bottom-color: rgba(79,142,247,0.15);
+  }
+  .field-label {
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 108px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .field-value {
+    flex: 1;
+    font-size: 15px;
+    color: var(--text);
+    min-width: 0;
+    word-break: break-word;
+  }
+  .field.highlight .field-value {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--accent-hover);
+  }
+  .copy-btn {
+    padding: 5px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { background: var(--border2); color: var(--text); }
+  .copy-btn.copied { color: var(--success); border-color: var(--success); }
+  .copy-all-btn {
+    width: 100%;
+    margin-top: 14px;
+    padding: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: none;
+  }
+  .copy-all-btn:hover { background: var(--surface2); }
+  .copy-all-btn.copied { color: var(--success); border-color: var(--success); }
+  @media (max-width: 400px) {
+    .field-label { min-width: 90px; font-size: 11px; }
+    .field-value { font-size: 14px; }
+    button.lookup-btn { padding: 12px 14px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>IP Address Lookup</h1>
+  <div class="input-row">
+    <input type="text" id="ipInput" placeholder="Auto-detecting your IP...">
+    <button class="lookup-btn" id="lookupBtn">Lookup</button>
+  </div>
+  <p id="errorMsg"></p>
+  <p id="loading"><span class="dot-anim">Fetching data</span></p>
+  <div class="result-card" id="resultCard">
+    <div class="field highlight">
+      <span class="field-label">Full Name</span>
+      <span class="field-value" id="v-fullname"></span>
+      <button class="copy-btn" data-id="v-fullname">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">First Name</span>
+      <span class="field-value" id="v-firstname"></span>
+      <button class="copy-btn" data-id="v-firstname">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">Last Name</span>
+      <span class="field-value" id="v-lastname"></span>
+      <button class="copy-btn" data-id="v-lastname">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">Street</span>
+      <span class="field-value" id="v-street"></span>
+      <button class="copy-btn" data-id="v-street">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">Address</span>
+      <span class="field-value" id="v-address"></span>
+      <button class="copy-btn" data-id="v-address">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">City</span>
+      <span class="field-value" id="v-city"></span>
+      <button class="copy-btn" data-id="v-city">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">State</span>
+      <span class="field-value" id="v-state"></span>
+      <button class="copy-btn" data-id="v-state">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">Postal Code</span>
+      <span class="field-value" id="v-postal"></span>
+      <button class="copy-btn" data-id="v-postal">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">Country</span>
+      <span class="field-value" id="v-country"></span>
+      <button class="copy-btn" data-id="v-country">Copy</button>
+    </div>
+    <div class="field">
+      <span class="field-label">Phone</span>
+      <span class="field-value" id="v-phone"></span>
+      <button class="copy-btn" data-id="v-phone">Copy</button>
+    </div>
+  </div>
+  <button class="copy-all-btn" id="copyAllBtn">Copy All Data</button>
+</div>
+<script>
+  const ipInput = document.getElementById('ipInput');
+  const lookupBtn = document.getElementById('lookupBtn');
+  const loading = document.getElementById('loading');
+  const errorMsg = document.getElementById('errorMsg');
+  const resultCard = document.getElementById('resultCard');
+  const copyAllBtn = document.getElementById('copyAllBtn');
+
+  function hide(el) { el.style.display = 'none'; }
+  function show(el, d) { el.style.display = d || 'block'; }
+
+  function reset() {
+    hide(loading); hide(errorMsg); hide(resultCard); hide(copyAllBtn);
+  }
+
+  async function autoDetect() {
+    try {
+      const r = await fetch('https://api.ipify.org?format=json');
+      const d = await r.json();
+      ipInput.placeholder = d.ip;
+      return d.ip;
+    } catch(e) {
+      ipInput.placeholder = 'Could not auto-detect. Enter IP manually.';
+      return null;
+    }
+  }
+
+  async function lookup(ip) {
+    reset();
+    lookupBtn.disabled = true;
+    show(loading);
+    try {
+      const r = await fetch(`https://tatsuyo.xyz/ipaddresss/?ipaddress=${encodeURIComponent(ip)}`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = await r.json();
+      populate(data);
+    } catch(e) {
+      hide(loading);
+      errorMsg.textContent = `Failed to fetch data. Please check the IP and try again.`;
+      show(errorMsg);
+    } finally {
+      lookupBtn.disabled = false;
+    }
+  }
+
+  function populate(data) {
+    const first = faker.name.firstName();
+    const last = faker.name.lastName();
+    const fullAddr = data.Address || '';
+    const streetOnly = fullAddr.split(',')[0].trim() || 'N/A';
+    const phone = data.Number ? data.Number.replace(/\D/g, '').slice(-10) : 'N/A';
+
+    document.getElementById('v-fullname').textContent = `${first} ${last}`;
+    document.getElementById('v-firstname').textContent = first;
+    document.getElementById('v-lastname').textContent = last;
+    document.getElementById('v-street').textContent = streetOnly;
+    document.getElementById('v-address').textContent = fullAddr || 'N/A';
+    document.getElementById('v-city').textContent = data.city || 'N/A';
+    document.getElementById('v-state').textContent = data.state || 'N/A';
+    document.getElementById('v-postal').textContent = data['postal code'] || 'N/A';
+    document.getElementById('v-country').textContent = data.country || 'N/A';
+    document.getElementById('v-phone').textContent = phone;
+
+    hide(loading);
+    show(resultCard, 'block');
+    show(copyAllBtn, 'block');
+  }
+
+  resultCard.addEventListener('click', e => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    const val = document.getElementById(btn.dataset.id)?.textContent;
+    if (!val) return;
+    navigator.clipboard.writeText(val).then(() => {
+      btn.textContent = 'Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+
+  copyAllBtn.addEventListener('click', () => {
+    const ids = ['v-fullname','v-firstname','v-lastname','v-street','v-address','v-city','v-state','v-postal','v-country','v-phone'];
+    const labels = ['Full Name','First Name','Last Name','Street','Address','City','State','Postal Code','Country','Phone'];
+    const text = ids.map((id, i) => `${labels[i]}: ${document.getElementById(id).textContent}`).join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      copyAllBtn.textContent = 'Copied to clipboard';
+      copyAllBtn.classList.add('copied');
+      setTimeout(() => { copyAllBtn.textContent = 'Copy All Data'; copyAllBtn.classList.remove('copied'); }, 2000);
+    });
+  });
+
+  lookupBtn.addEventListener('click', () => {
+    const val = ipInput.value.trim() || ipInput.placeholder;
+    if (!val || val.includes('detect') || val.includes('Enter')) return;
+    lookup(val);
+  });
+
+  ipInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') lookupBtn.click();
+  });
+
+  (async () => {
+    const ip = await autoDetect();
+    if (ip) lookup(ip);
+  })();
+</script>
+</body>
+</html>
