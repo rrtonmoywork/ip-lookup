@@ -34,145 +34,49 @@
     align-items: flex-start;
     padding: 24px 16px 40px;
   }
-  .container {
-    width: 100%;
-    max-width: 560px;
-  }
-  h1 {
-    font-size: 20px;
-    font-weight: 500;
-    text-align: center;
-    margin-bottom: 24px;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-  .input-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 24px;
-  }
+  .container { width: 100%; max-width: 560px; }
+  h1 { font-size: 20px; font-weight: 500; text-align: center; margin-bottom: 24px; color: var(--text); letter-spacing: -0.3px; }
+  .input-row { display: flex; gap: 10px; margin-bottom: 24px; }
   input[type="text"] {
-    flex: 1;
-    padding: 12px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s;
-    min-width: 0;
+    flex: 1; padding: 12px 14px; background: var(--surface);
+    border: 1px solid var(--border2); border-radius: var(--radius-sm);
+    color: var(--text); font-size: 15px; outline: none; transition: border-color 0.2s; min-width: 0;
   }
   input[type="text"]::placeholder { color: var(--muted); }
   input[type="text"]:focus { border-color: var(--accent); }
   button.lookup-btn {
-    padding: 12px 20px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, opacity 0.2s;
-    white-space: nowrap;
-    flex-shrink: 0;
+    padding: 12px 20px; background: var(--accent); color: #fff; border: none;
+    border-radius: var(--radius-sm); font-size: 15px; font-weight: 500; cursor: pointer;
+    transition: background 0.2s, opacity 0.2s; white-space: nowrap; flex-shrink: 0;
   }
   button.lookup-btn:hover { background: var(--accent-hover); }
   button.lookup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  #loading {
-    text-align: center;
-    color: var(--muted);
-    font-size: 15px;
-    padding: 20px 0;
-    display: none;
-  }
-  .dot-anim::after {
-    content: '';
-    animation: dots 1.2s infinite;
-  }
-  @keyframes dots {
-    0%   { content: ''; }
-    33%  { content: '.'; }
-    66%  { content: '..'; }
-    100% { content: '...'; }
-  }
+  #loading { text-align: center; color: var(--muted); font-size: 15px; padding: 20px 0; display: none; }
+  .dot-anim::after { content: ''; animation: dots 1.2s infinite; }
+  @keyframes dots { 0% { content: ''; } 33% { content: '.'; } 66% { content: '..'; } 100% { content: '...'; } }
   #errorMsg {
-    background: var(--danger-bg);
-    border: 1px solid rgba(255,95,95,0.3);
-    color: var(--danger);
-    border-radius: var(--radius-sm);
-    padding: 12px 16px;
-    font-size: 14px;
-    display: none;
-    margin-bottom: 16px;
+    background: var(--danger-bg); border: 1px solid rgba(255,95,95,0.3);
+    color: var(--danger); border-radius: var(--radius-sm); padding: 12px 16px;
+    font-size: 14px; display: none; margin-bottom: 16px;
   }
-  .result-card {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    overflow: hidden;
-    display: none;
-  }
-  .field {
-    display: flex;
-    align-items: center;
-    padding: 13px 16px;
-    border-bottom: 1px solid var(--border);
-    gap: 12px;
-  }
+  .result-card { background: var(--surface); border: 1px solid var(--border2); border-radius: var(--radius); overflow: hidden; display: none; }
+  .field { display: flex; align-items: center; padding: 13px 16px; border-bottom: 1px solid var(--border); gap: 12px; }
   .field:last-child { border-bottom: none; }
-  .field.highlight {
-    background: var(--accent-dim);
-    border-bottom-color: rgba(79,142,247,0.15);
-  }
-  .field-label {
-    font-size: 12px;
-    color: var(--muted);
-    min-width: 108px;
-    flex-shrink: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .field-value {
-    flex: 1;
-    font-size: 15px;
-    color: var(--text);
-    min-width: 0;
-    word-break: break-word;
-  }
-  .field.highlight .field-value {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--accent-hover);
-  }
+  .field.highlight { background: var(--accent-dim); border-bottom-color: rgba(79,142,247,0.15); }
+  .field-label { font-size: 12px; color: var(--muted); min-width: 108px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field-value { flex: 1; font-size: 15px; color: var(--text); min-width: 0; word-break: break-word; }
+  .field.highlight .field-value { font-size: 16px; font-weight: 500; color: var(--accent-hover); }
   .copy-btn {
-    padding: 5px 12px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--muted);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-    flex-shrink: 0;
-    white-space: nowrap;
+    padding: 5px 12px; background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); color: var(--muted); font-size: 12px; cursor: pointer;
+    transition: all 0.15s; flex-shrink: 0; white-space: nowrap;
   }
   .copy-btn:hover { background: var(--border2); color: var(--text); }
   .copy-btn.copied { color: var(--success); border-color: var(--success); }
   .copy-all-btn {
-    width: 100%;
-    margin-top: 14px;
-    padding: 13px;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: none;
+    width: 100%; margin-top: 14px; padding: 13px; background: var(--surface);
+    border: 1px solid var(--border2); border-radius: var(--radius-sm); color: var(--text);
+    font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s; display: none;
   }
   .copy-all-btn:hover { background: var(--surface2); }
   .copy-all-btn.copied { color: var(--success); border-color: var(--success); }
@@ -187,7 +91,7 @@
 <div class="container">
   <h1>IP Address Lookup</h1>
   <div class="input-row">
-    <input type="text" id="ipInput" placeholder="Auto-detecting your IP...">
+    <input type="text" id="ipInput" placeholder="Detecting your IP...">
     <button class="lookup-btn" id="lookupBtn">Lookup</button>
   </div>
   <p id="errorMsg"></p>
@@ -256,21 +160,29 @@
 
   function hide(el) { el.style.display = 'none'; }
   function show(el, d) { el.style.display = d || 'block'; }
+  function reset() { hide(loading); hide(errorMsg); hide(resultCard); hide(copyAllBtn); }
 
-  function reset() {
-    hide(loading); hide(errorMsg); hide(resultCard); hide(copyAllBtn);
+  async function tryFetch(url, parser) {
+    const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+    if (!r.ok) throw new Error('bad response');
+    return parser(await r.text());
   }
 
   async function autoDetect() {
-    try {
-      const r = await fetch('https://api.ipify.org?format=json');
-      const d = await r.json();
-      ipInput.placeholder = d.ip;
-      return d.ip;
-    } catch(e) {
-      ipInput.placeholder = 'Could not auto-detect. Enter IP manually.';
-      return null;
+    const sources = [
+      ['https://api.ipify.org?format=json',    t => JSON.parse(t).ip],
+      ['https://api4.my-ip.io/ip.json',         t => JSON.parse(t).ip],
+      ['https://api.my-ip.io/ip.json',          t => JSON.parse(t).ip],
+      ['https://icanhazip.com',                  t => t.trim()],
+      ['https://checkip.amazonaws.com',          t => t.trim()],
+    ];
+    for (const [url, parser] of sources) {
+      try {
+        const ip = await tryFetch(url, parser);
+        if (ip && ip.length > 3) return ip;
+      } catch(e) {}
     }
+    return null;
   }
 
   async function lookup(ip) {
@@ -284,7 +196,7 @@
       populate(data);
     } catch(e) {
       hide(loading);
-      errorMsg.textContent = `Failed to fetch data. Please check the IP and try again.`;
+      errorMsg.textContent = 'Failed to fetch data. Please check the IP and try again.';
       show(errorMsg);
     } finally {
       lookupBtn.disabled = false;
@@ -338,18 +250,21 @@
   });
 
   lookupBtn.addEventListener('click', () => {
-    const val = ipInput.value.trim() || ipInput.placeholder;
-    if (!val || val.includes('detect') || val.includes('Enter')) return;
-    lookup(val);
+    const val = ipInput.value.trim() || ipInput.dataset.detected;
+    if (val) lookup(val);
   });
 
-  ipInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') lookupBtn.click();
-  });
+  ipInput.addEventListener('keydown', e => { if (e.key === 'Enter') lookupBtn.click(); });
 
   (async () => {
     const ip = await autoDetect();
-    if (ip) lookup(ip);
+    if (ip) {
+      ipInput.placeholder = ip;
+      ipInput.dataset.detected = ip;
+      lookup(ip);
+    } else {
+      ipInput.placeholder = 'Could not auto-detect. Enter IP manually.';
+    }
   })();
 </script>
 </body>
